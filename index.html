@@ -262,7 +262,7 @@
       <div class="sec-b" style="padding:8px 14px;">
         <div class="row" style="border:none;">
           <div class="row-label" style="width:auto;margin-right:12px;">날짜</div>
-          <input type="date" class="row-input" id="bizDate" style="font-size:15px;">
+          <input type="date" class="row-input" id="bizDate" style="font-size:15px;" onchange="onDateChange()">
         </div>
       </div>
     </div>
@@ -498,6 +498,22 @@ function S(n){return String(n).padStart(2,'0');}
 function $(id){return document.getElementById(id);}
 function p(s){return parseInt(String(s||'').replace(/[^0-9]/g,''))||0;}
 function f(n){return n.toLocaleString('ko-KR');}
+
+function onDateChange(){
+  const date=$('bizDate').value;
+  const hist=JSON.parse(localStorage.getItem(KEY)||'{}');
+  if(hist[date]){
+    loadEntry(date);
+    toast('저장된 데이터 불러옴');
+  } else {
+    ['doorCard','doorCash','barCard','barCash','coatCard','attPaid','attGuest','cashStartDoor','cashStartBar'].forEach(id=>$(id).value='');
+    photos=[];renderPhotos();
+    $('memo0').value='';$('memo2').value='';
+    let i=0;Object.values(CK0).flat().forEach(()=>{ck0[i++]=null;});
+    i=0;Object.values(CK2).flat().forEach(()=>{ck2[i++]=null;});
+    renderCk(0);renderCk(2);gen();
+  }
+}
 
 function fmt(el){
   let r=el.value.replace(/[^0-9]/g,'');
